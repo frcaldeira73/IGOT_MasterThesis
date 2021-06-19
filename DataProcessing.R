@@ -22,16 +22,19 @@
 ##
 ## ---------------------------
 ##
-## Notes: This script has three arguments
+## Notes: This script has five arguments
 ## SourceFile -> It's the openWaether csv file and path
 ## OutfileNormalized -> It's the new file with climatic data for month and path Normalized
 ## OutfileNotNormalized -> It's the new file with climatic data for month and path not Normalized
+## years -> vextor with the years to process
+## 
+
 ## ---------------------------
 
 
   
 
-DataProcessing <- function(SourceFile, OutfileNormalized, OutfileNotNormalized, years, WheatProduction = c()){
+DataProcessing <- function(SourceFile, OutfileNormalized, OutfileNotNormalized, years, WheatProductivity = c()){
 #----------------
 #DATA PREPARATION
 #----------------
@@ -117,32 +120,30 @@ boxplot (myData$temp, ylab="Temperatura (cº)", main =  "Temperatura na estação m
 #---------------------
 
 # Variable List
-# 01. Precipitação mensal (rain_1h) RainByDay // RainByMonth
-# 02. Temperatura Média (temp)  TempAVGByDay // TempAVGByMonth
-# 03. Temperatura Mínima (temp_min) TempMINByDay // TempMINByMonth
-# 04. Temperatura Máxima (temp_max) TempMAXByDay // TempMAXByMonth
-# 05. Cloudiness (clouds_all) CloudsAVGByDay // CloudsAVGByMonth
-#  Velocidade do Vento ??
-#  Direção do vento ??
-# 06. Humidade(humidity) //HumidityAVGByMonth
-# 07. 15 Setembro a 15 Outubro com Chuva
-# 08. Abril com 100mm chuva (Entre 75 e 125mm)
-# 09. Maio com chuva
-# 10. Junho sem Chuva
-# 11. Março e Abril entre 15º e 20º
-# 12. Maio e Junho entre 16º e 20º
-# 13. Nº dias Maio e Junho > 30º e vento de Este
-# 14. Nº dias Maio e Junho > 30º  
-# 15. Nº horas com Temperatura mínima negativa Dezembro - Possibilidade de Geadas
-# 16. Nº horas com Temperatura mínima negativa Janeiro - Possibilidade de Geadas 
-# 17. Nº horas com Temperatura mínima negativa Fevereiro - Possibilidade de Geadas 
+# 01. monthly precipitation - Precipitação mensal (rain_1h) RainByDay // RainByMonth
+# 02. Monthly average Temperature - Temperatura Média mensal (temp)  TempAVGByDay // TempAVGByMonth
+# 03. Monthly Minimum temperature - Temperatura Mínima mensal (temp_min) TempMINByDay // TempMINByMonth
+# 04. Monthly maximum  temperature Temperatura Máxima mensal (temp_max) TempMAXByDay // TempMAXByMonth
+# 05. Monthly Cloudiness - nebulosidade mensal(clouds_all) CloudsAVGByDay // CloudsAVGByMonth
+# 06. Monthly humidity - Humidade mensal(humidity) //HumidityAVGByMonth
+# 07. 15 September to 15 October with Rain - 15 Setembro a 15 Outubro com Chuva
+# 08. April with 100mm of rain - Abril com 100mm chuva (Entre 75 e 125mm)
+# 09. May with rain - Maio com chuva
+# 10. June without rain - Junho sem Chuva
+# 11. Number of days of March and April between 15ºC and 20ºC - Março e Abril entre 15ºC e 20ºC
+# 12. Number of days of May and June between 16ºC and 20ºC - Maio e Junho entre 16ºC e 20ºC
+# 13. Number of hours of May and June > 30ºC and East wind - Nº dias Maio e Junho > 30º e vento de Este
+# 14. Number of hours of May and June > 30ºC - Nº dias Maio e Junho > 30ºC  
+# 15. Number of hours with negative minimum temperature December - Possibility of Frost - Nº horas com Temperatura mínima negativa Dezembro - Possibilidade de Geadas
+# 16. Number of hours with negative minimum temperature January - Possibility of Frost - Nº horas com Temperatura mínima negativa Janeiro - Possibilidade de Geadas 
+# 17. Number of hours with negative minimum temperature February - Possibility of Frost - Nº horas com Temperatura mínima negativa Fevereiro - Possibilidade de Geadas 
 
 
 library(dplyr)
 library(rlist)
 
 #-----------------------------------------------------------------------
-#Variable 01 Precipitação mensal (rain_1h) - RainByDay // RainByMonth
+#Variable 01 monthly precipitation - Precipitação mensal (rain_1h) - RainByDay // RainByMonth
 #-----------------------------------------------------------------------
 
 RainByDay  = myData %>%
@@ -168,7 +169,7 @@ RainByMonth <-RainByMonth[order(as.Date( RainByMonth$Month_Year, format="%m/%Y")
 #View(RainByMonth)
 
 #-------------------------------------------------------------------------
-#Variable 2 Temperatura Média (temp) -TempAVGByDay // TempAVGByMonth
+#Variable 2 Monthly average Temperature - Temperatura Média mensal(temp) -TempAVGByDay // TempAVGByMonth
 #-------------------------------------------------------------------------
 
 TempAVGByDay  = myData %>%
@@ -189,7 +190,7 @@ TempAVGByMonth <-TempAVGByMonth[order(as.Date( TempAVGByMonth$Month_Year, format
 
 
 #-------------------------------------------------------------------------
-#Variable 3 Temperatura Mínima (temp_min) -TempMINByDay // TempMINByMonth
+#Variable 3 Monthly Minimum temperature - Temperatura Mínima mensal(temp_min) -TempMINByDay // TempMINByMonth
 #-------------------------------------------------------------------------
 
 
@@ -211,7 +212,7 @@ TempMINByMonth <-TempMINByMonth[order(as.Date( TempMINByMonth$Month_Year, format
 
 
 #-------------------------------------------------------------------------
-#Variable 4 Temperatura Máxima (temp_max) - TempMAXByDay // TempMAXByMonth
+#Variable 4 Monthly maximum  temperature - Temperatura Máxima mensal(temp_max) - TempMAXByDay // TempMAXByMonth
 #-------------------------------------------------------------------------
 
 TempMAXByDay  = myData %>%
@@ -234,7 +235,7 @@ TempMAXByMonth <-TempMAXByMonth[order(as.Date( TempMAXByMonth$Month_Year, format
 
 
 #-------------------------------------------------------------------------
-#Variable 5 Cloudiness (clouds) CloudsAVGByDay // CloudsAVGByMonth
+#Variable 5 Monthly Cloudiness (clouds) - nebulosidade mensal  CloudsAVGByDay // CloudsAVGByMonth
 #-------------------------------------------------------------------------
 
 CloudsAVGByDay  = myData %>%
@@ -258,7 +259,7 @@ CloudsAVGByMonth <-CloudsAVGByMonth[order(as.Date( CloudsAVGByMonth$Month_Year, 
 
 
 #-------------------------------------------------------------------------
-#Variable 6 Humidade(humidity) - HumidityAVGByDay // HumidityAVGByMonth
+#Variable 6 Monthly humidity - Humidade mensal (humidity) - HumidityAVGByDay // HumidityAVGByMonth
 #-------------------------------------------------------------------------
 
 
@@ -282,7 +283,7 @@ HumidityAVGByMonth <-HumidityAVGByMonth[order(as.Date( HumidityAVGByMonth$Month_
 
 
 #-------------------------------------------------------------------------
-#Variable 7 15 Setembro a 15 Outubro com Chuva  vector_TotRainSeptemberOctober
+#Variable 7 15 September to 15 October with Rain - 15 Setembro a 15 Outubro com Chuva  vector_TotRainSeptemberOctober
 #-------------------------------------------------------------------------
 #View(myData)
 #vector with year list
@@ -318,7 +319,7 @@ for (Each_year in yearList){
 
 
 #-------------------------------------------------------------------------
-#Variable 8 Abril com 100mm de Chuva (50~150) vector_TotRainAbrilBetween
+#Variable 8 April with 100mm of rain - Abril com 100mm de Chuva (50~150) vector_TotRainAbrilBetween
 #-------------------------------------------------------------------------
 #View(myData)
 
@@ -347,7 +348,7 @@ for (Each_year in yearList){
 #View (vector_TotRainAbrilBetween)
 
 #-------------------------------------------------------------------------
-#Variable 9 Maio com Chuva vector_RainMay (> 5mm)
+#Variable 9 May with rain - Maio com Chuva vector_RainMay (> 5mm)
 #-------------------------------------------------------------------------
 
 yearList = unique(myData$year, incomparables = FALSE)
@@ -375,7 +376,7 @@ for (Each_year in yearList){
 # View (vector_RainMay)  
 
 #-------------------------------------------------------------------------
-#Variable 10 Junho sem Chuva vector_RainJune (> 0mm)
+#Variable 10 June without rain - Junho sem Chuva vector_RainJune (> 0mm)
 #-------------------------------------------------------------------------
 
 yearList = unique(myData$year, incomparables = FALSE)
@@ -404,7 +405,7 @@ for (Each_year in yearList){
 
 
 #-------------------------------------------------------------------------
-#Variable 11 dias Março e Abril entre 15º e 20º TotDaysMArsApril15to20
+#Variable 11 Number of hours of March and April between 15ºC and 20ºC - dias Março e Abril entre 15º e 20º TotDaysMArsApril15to20
 #-------------------------------------------------------------------------
 # 
  yearList = unique(myData$year, incomparables = FALSE)
@@ -451,7 +452,7 @@ TotDaysMArsApril15to20= c()
 
 
 #-------------------------------------------------------------------------
-#Variable 12 dias Maio e Junho entre 16º e 20º TotDaysMayJune16to20
+#Variable 12 Number of hours of May and June between 16ºC and 20ºC - dias Maio e Junho entre 16º e 20º TotDaysMayJune16to20
 #-------------------------------------------------------------------------
 # 
 yearList = unique(myData$year, incomparables = FALSE)
@@ -496,7 +497,7 @@ for (Each_year in yearList){
 
 
  #-------------------------------------------------------------------------
- #Variable 13 horas Maio e Junho > 30º e vento de Este TotHoursMayJuneOver30WindEast
+ #Variable 13 Number of hours of May and June > 30ºC and East wind - horas Maio e Junho > 30º e vento de Este TotHoursMayJuneOver30WindEast
  #-------------------------------------------------------------------------
  
  yearList = unique(myData$year, incomparables = FALSE)
@@ -536,7 +537,7 @@ TotHoursMayJuneOver30WindEast= c()
 #View(TotHoursMayJuneOver30WindEast)
   
   #-------------------------------------------------------------------------
-  #Variable 14 horas Maio e Junho > 30º  TotHoursMayJuneOver30 
+  #Variable 14 Number of hours of May and June > 30ºC - horas Maio e Junho > 30º  TotHoursMayJuneOver30 
   #-------------------------------------------------------------------------
   
   yearList = unique(myData$year, incomparables = FALSE)
@@ -574,7 +575,7 @@ TotHoursMayJuneOver30WindEast= c()
   
   
   #-------------------------------------------------------------------------
-  #Variable 15 horas Dezembro <0º  TotHoursDezemberUnder0 
+  #Variable 15 Number of hours with negative minimum temperature December - horas Dezembro <0º  TotHoursDezemberUnder0 
   #-------------------------------------------------------------------------
   
   yearList = unique(myData$year, incomparables = FALSE)
@@ -600,7 +601,7 @@ TotHoursMayJuneOver30WindEast= c()
   
   
   #-------------------------------------------------------------------------
-  #Variable 16 horas January <0º  TotHoursJanuaryUnder0 
+  #Variable 16 Number of hours with negative minimum temperature January -horas January <0º  TotHoursJanuaryUnder0 
   #-------------------------------------------------------------------------
   
   yearList = unique(myData$year, incomparables = FALSE)
@@ -626,7 +627,7 @@ TotHoursMayJuneOver30WindEast= c()
   
 
   #-------------------------------------------------------------------------
-  #Variable 17 horas February <0º  TotHoursFebruaryUnder0 
+  #Variable 17 Number of hours with negative minimum temperature February - horas February <0º  TotHoursFebruaryUnder0 
   #-------------------------------------------------------------------------
   
   yearList = unique(myData$year, incomparables = FALSE)
@@ -1080,7 +1081,7 @@ TotHoursMayJuneOver30WindEast= c()
   
   
   
-  df_Analysis <- data.frame(years,WheatProduction, dfRainMonthSeptember, dfRainMonthOctober,
+  df_Analysis <- data.frame(years,WheatProductivity, dfRainMonthSeptember, dfRainMonthOctober,
                             dfRainMonthNovember, dfRainMonthDecember, dfRainMonthJanuary, 
                             dfRainMonthFebruary, dfRainMonthMarch, dfRainMonthApril,
                             dfRainMonthMay,dfRainMonthJune, dfTempAVGMonthSeptember,
@@ -1149,8 +1150,7 @@ write.csv(df_Analysis,OutfileNotNormalized, row.names = TRUE)
 # column normalization
 #------------------------------------------------------
 
-#df_Analysis <- read.csv("C:\\lab\\mestrado\\TESE\\DADOS\\EO\\LandSat\\DadosClassificacaoImagem9\\LandSatData3.csv", header = TRUE) 
-#df_Analysis <- read.csv("C:\\lab\\mestrado\\TESE\\DADOS\\ClimateAndNDVIData\\BEJA_01_DataForModelNotNormalized15_2.csv", header = TRUE) 
+ 
 
 
 #Column with productivity not normalized
@@ -1213,11 +1213,11 @@ Myyears  <- c(1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,
             2010,2011,2012,2013,2014,2015,2016,2017,2018)
 
 #Variable02 - Wheat Productivity(kg/ha)
-MyWheatProduction <- c(1688,1755,1430,1983,1481,2177,1350,1725,2062,1433,
+MyWheatProductivity <- c(1688,1755,1430,1983,1481,2177,1350,1725,2062,1433,
                      1799,1214,1033,1600,1578,817,1796,812,1577,605,2480,
                      1919,2387,1772,1515,1233,1124,1830,2225,2202,2592,2250,2713)
 
 
 
  
-DataProcessing(SourceFile = MySourceFile, OutfileNormalized = MyOutfileNormalized, OutfileNotNormalized = MyOutfileNotNormalized, years= Myyears, WheatProduction = MyWheatProduction)
+DataProcessing(SourceFile = MySourceFile, OutfileNormalized = MyOutfileNormalized, OutfileNotNormalized = MyOutfileNotNormalized, years= Myyears, WheatProductivity = MyWheatProductivity)
